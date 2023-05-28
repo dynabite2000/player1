@@ -16,16 +16,21 @@
     <input type="number" id="guessInput" placeholder="Enter your guess">
     <button onclick="checkGuess()">Check</button>
     <p id="result"></p>
+    <h2>Leaderboard</h2>
+    <ul id="leaderboard"></ul>
   </div>
 
   <script>
-    // Generate a random number between 1 and 100
     const randomNumber = Math.floor(Math.random() * 100) + 1;
     let attempts = 0;
+
+    // Load leaderboard records from localStorage or initialize an empty array
+    let leaderboardRecords = JSON.parse(localStorage.getItem("leaderboard")) || [];
 
     function checkGuess() {
       const guessInput = document.getElementById("guessInput");
       const result = document.getElementById("result");
+      const leaderboard = document.getElementById("leaderboard");
       const guess = parseInt(guessInput.value);
 
       if (isNaN(guess) || guess < 1 || guess > 100) {
@@ -36,6 +41,26 @@
         if (guess === randomNumber) {
           result.textContent = `Congratulations! You guessed the number in ${attempts} attempts.`;
           guessInput.disabled = true;
+
+          // Add the current record to the leaderboard
+          leaderboardRecords.push({
+            attempts,
+            timestamp: new Date().toLocaleString()
+          });
+
+          // Sort the leaderboard records by attempts in ascending order
+          leaderboardRecords.sort((a, b) => a.attempts - b.attempts);
+
+          // Limit the leaderboard to show only the top 10 records
+          leaderboardRecords = leaderboardRecords.slice(0, 10);
+
+          // Update the leaderboard display
+          leaderboard.innerHTML = leaderboardRecords
+            .map(record => `<li>${record.attempts} attempts - ${record.timestamp}</li>`)
+            .join("");
+
+          // Save the updated leaderboard records to localStorage
+          localStorage.setItem("leaderboard", JSON.stringify(leaderboardRecords));
         } else if (guess < randomNumber) {
           result.textContent = "Too low! Try a higher number.";
         } else {
@@ -49,4 +74,3 @@
   </script>
 </body>
 </html>
-
