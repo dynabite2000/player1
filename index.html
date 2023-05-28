@@ -1,1 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .center {
+      text-align: center;
+      margin-top: 100px;
+    }
+  </style>
+  <title>Guess the Number</title>
+</head>
+<body>
+  <div class="center">
+    <h1>Guess the Number</h1>
+    <p>Try to guess the random number between 1 and 100:</p>
+    <input type="number" id="guessInput" placeholder="Enter your guess">
+    <button onclick="checkGuess()">Check</button>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    // Generate a random number between 1 and 100
+    const randomNumber = Math.floor(Math.random() * 100) + 1;
+    let attempts = 0;
+
+    function checkGuess() {
+      const guessInput = document.getElementById("guessInput");
+      const result = document.getElementById("result");
+      const guess = parseInt(guessInput.value);
+
+      if (isNaN(guess) || guess < 1 || guess > 100) {
+        result.textContent = "Please enter a valid number between 1 and 100.";
+      } else {
+        attempts++;
+
+        if (guess === randomNumber) {
+          result.textContent = `Congratulations! You guessed the number in ${attempts} attempts.`;
+          guessInput.disabled = true;
+        } else if (guess < randomNumber) {
+          result.textContent = "Too low! Try a higher number.";
+        } else {
+          result.textContent = "Too high! Try a lower number.";
+        }
+      }
+
+      guessInput.value = "";
+      guessInput.focus();
+    }
+  </script>
+</body>
+</html>
 
